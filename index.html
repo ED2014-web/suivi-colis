@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Suivi de colis - Maquette</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #ffcc00;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #000;
+    }
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      background-color: #ffcc00;
+      color: #000;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #e6b800;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e8f5e9;
+      border-left: 5px solid #4caf50;
+      display: none;
+    }
+    .details {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e3f2fd;
+      border-left: 5px solid #2196f3;
+      display: none;
+    }
+    .map img {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Suivi de colis</h1>
+  </header>
+
+  <div class="container">
+    <label for="tracking">Numéro de suivi</label>
+    <input type="text" id="tracking" placeholder="Ex : 8L0000000000Z" />
+    <button onclick="showResult()">Suivre</button>
+
+    <div id="result" class="result"></div>
+    <div id="details" class="details">
+      <h3>Détails de livraison :</h3>
+      <p><strong>Adresse prévue :</strong> 16 bis chemin de la Saudrune, 31120 Roques</p>
+      <p><strong>Date estimée :</strong> 6 juillet 2025</p>
+      <p><strong>Statut :</strong> En cours d'acheminement</p>
+      <div class="map">
+        <h4>Carte de localisation :</h4>
+        <iframe
+          src="https://www.google.com/maps?q=16+bis+chemin+de+la+Saudrune,+31120+Roques&output=embed"
+          width="100%"
+          height="300"
+          style="border:1px solid #ccc; border-radius:8px;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showResult() {
+      const input = document.getElementById("tracking").value.trim().toUpperCase();
+      const resultDiv = document.getElementById("result");
+      const detailsDiv = document.getElementById("details");
+
+      const colisData = {
+        "8L1234567890Z": {
+          statut: "📦 En cours d’acheminement",
+          date: "05 juillet 2025, 13h32",
+          lieu: "Centre de tri de Lyon"
+        },
+        "COLIS987654321": {
+          statut: "✅ Livré",
+          date: "04 juillet 2025, 09h10",
+          lieu: "Boîte aux lettres - 16 bis chemin de la Saudrune, 31120 Roques"
+        },
+        "TEST123456": {
+          statut: "⏳ En attente de retrait",
+          date: "05 juillet 2025, 16h45",
+          lieu: "Point relais Toulouse Centre"
+        }
+      };
+
+      if (input in colisData) {
+        const data = colisData[input];
+        resultDiv.innerHTML = `${data.statut}<br/><em>Dernière mise à jour : ${data.date}</em> – ${data.lieu}.`;
+        resultDiv.style.backgroundColor = "#e8f5e9";
+        resultDiv.style.borderLeft = "5px solid #4caf50";
+        resultDiv.style.display = "block";
+        detailsDiv.style.display = "block";
+      } else if (input.length > 5) {
+        resultDiv.innerHTML = "❓ Numéro inconnu. Veuillez réessayer plus tard.";
+        resultDiv.style.backgroundColor = "#fff3cd";
+        resultDiv.style.borderLeft = "5px solid #ffc107";
+        resultDiv.style.display = "block";
+        detailsDiv.style.display = "none";
+      } else {
+        resultDiv.innerHTML = "⚠️ Numéro de suivi invalide.";
+        resultDiv.style.backgroundColor = "#f8d7da";
+        resultDiv.style.borderLeft = "5px solid #dc3545";
+        resultDiv.style.display = "block";
+        detailsDiv.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
